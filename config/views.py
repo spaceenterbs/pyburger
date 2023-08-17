@@ -21,15 +21,28 @@ def main(request):
 def burger_search(request):
     # request.GET에서 "keyword"라는 키로 전달된 데이터를 가져와 출력
     keyword = request.GET.get("keyword")
-    print(keyword)
+
+    # keyword 값이 주어진 경우
+    if keyword is not None:
+        # keyword 값으로 검색된 QuerySet을 할당
+        burgers = Burger.objects.filter(name__contains=keyword)
+
+    # 주소표시줄을 통해 keyword가 주어지지 않아, None이 할당된 경우
+    else:
+        # 검색 결과가 없는 것과 같은 빈 QuerySet을 할당
+        burgers = Burger.objects.none()
+
+    # 3 print(keyword)
     # 1 print(request.GET)  # request.GET으로 전달된 데이터를 출력
 
     # 이름(name 속성)에 전달받은 키워드 값이 포함된 Burger를 검색
-    burgers = Burger.objects.filter(name__contains=keyword)
+    # burgers = Burger.objects.filter(name__contains=keyword)
     # 2 print(burgers)
     context = {"burgers": burgers}
 
     return render(request, "burger_search.html", context)
+
+    # http://localhost:8000/search/?keyword=더블
 
 
 # def burger_list(request):
